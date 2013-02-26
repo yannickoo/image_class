@@ -1,0 +1,4 @@
+name = Image class
+description = Extends the Image formatter which adds the option to add a class.
+core = 7.x
+dependencies[] = field_formatter_settings
