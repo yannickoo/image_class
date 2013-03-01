@@ -23,7 +23,7 @@ function image_class_field_formatter_settings_form_alter(&$settings_form, $conte
     '#title' => t('Classes'),
     '#type' => 'textfield',
     '#default_value' => $settings['class'],
-    '#description' => t('Enter space seperated classes which will be added to the <img> element.'),
+    '#description' => t('Enter space seperated classes which will be added to the %img element.', array('%img' => '<img>')),
   );
 
 }
