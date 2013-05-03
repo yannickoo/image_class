@@ -73,7 +73,7 @@ function image_class_field_attach_view_alter(&$output, $context) {
     $settings = $display['settings'];
 
     // Return if 'class' setting is not available.
-    if (!isset($settings['class'])) {
+    if (!isset($settings['class']) || !$settings['class']) {
       return;
     }
 
