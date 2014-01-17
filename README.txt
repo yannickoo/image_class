@@ -11,7 +11,7 @@ INTRODUCTION
 Current Maintainers:
   Yannick Leyendecker (http://drupal.org/user/531118)
 
-Extends the Image formatter by adding an option to add an element class.
+Extends the image formatter by adding an option to add an element class.
 
 
 INSTALLATION

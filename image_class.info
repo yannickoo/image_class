@@ -1,4 +1,4 @@
-name = Image class
+name = Image Class
 description = Extends the Image formatter by adding an option to add an element class.
 core = 7.x
 dependencies[] = image
