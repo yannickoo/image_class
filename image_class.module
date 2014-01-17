@@ -19,13 +19,14 @@ function image_class_field_formatter_settings_form_alter(&$settings_form, $conte
   $display = $context['instance']['display'][$context['view_mode']];
   $settings = $display['settings'];
 
-  $settings_form['class'] = array(
-    '#title' => t('Classes'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['class'],
-    '#description' => t('Enter space seperated classes which will be added to the %img element.', array('%img' => '<img>')),
-  );
-
+  if ($context['instance']['display'][$context['view_mode']]['type'] == 'image') {
+    $settings_form['class'] = array(
+      '#title' => t('Classes'),
+      '#type' => 'textfield',
+      '#default_value' => $settings['class'],
+      '#description' => t('Enter space seperated classes which will be added to the %img element.', array('%img' => '<img>')),
+    );
+  }
 }
 
 /**
@@ -35,8 +36,10 @@ function image_class_field_formatter_settings_summary_alter(&$summary, $context)
   $display = $context['instance']['display'][$context['view_mode']];
   $settings = $display['settings'];
 
-  if (isset($settings['class']) && $settings['class']) {
-    $summary .= '<br />' . t('Class: @class', array('@class' => $settings['class']));
+  if ($context['instance']['display'][$context['view_mode']]['type'] == 'image') {
+    if (isset($settings['class']) && $settings['class']) {
+      $summary .= '<br />' . t('Class: @class', array('@class' => $settings['class']));
+    }
   }
 }
 
