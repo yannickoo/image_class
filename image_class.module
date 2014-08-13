@@ -74,14 +74,17 @@ function image_class_field_attach_view_alter(&$output, $context) {
     }
 
     $settings = $display['settings'];
+    $class = isset($settings['class']) ? trim($settings['class']) : FALSE;
 
-    // Return if 'class' setting is not available.
-    if (!isset($settings['class']) || !$settings['class']) {
-      return;
+    // Move on to the next child if 'class' setting is not available.
+    if (!$class) {
+      continue;
     }
 
+    // Add 'class' setting to the attributes of all children elements.
     foreach (element_children($element) as $delta) {
-      $element[$delta]['#item']['attributes']['class'] = $settings['class'];
+      // If 'class' setting is provided as string add it as an array.
+      $element[$delta]['#item']['attributes']['class'] = explode(' ', trim($settings['class']));
     }
   }
 }
