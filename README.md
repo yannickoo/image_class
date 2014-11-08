@@ -1,21 +1,12 @@
-CONTENTS OF THIS FILE
----------------------
-
- * Introduction
- * Installation
-
-
-INTRODUCTION
-------------
+# Introduction
 
 Current Maintainers:
-  Yannick Leyendecker (http://drupal.org/user/531118)
+
+* [yannickoo](https://www.drupal.org/u/yannickoo)
 
 Extends the image formatter by adding an option to add an element class.
 
-
-INSTALLATION
-------------
+# Installation
 
 1. Install the module the drupal way [1]
 
