@@ -1,0 +1,6 @@
+name: Image Class
+type: module
+description: 'Extends the Image formatter by adding an option to add an element class.'
+core: 8.x
+dependencies:
+  - image

@@ -1,16 +1,16 @@
-# Introduction
+# Image Class
 
-Current Maintainers:
+> Extends the image formatter by adding an option to add an element class.
 
-* [yannickoo](https://www.drupal.org/u/yannickoo)
+## Installation
 
-Extends the image formatter by adding an option to add an element class.
+1. Install the module the [drupal way](http://drupal.org/documentation/install/modules-themes/modules-8)
 
-# Installation
+2. Go to "Manage display" and select _Image_ or _Responsive Image_ as formatter for an image field.
 
-1. Install the module the [drupal way](http://drupal.org/documentation/install/modules-themes/modules-7)
+3. Click the cogwheel button. Then you can enter the element class(es) for
+   the image field.
 
-2. Go to "Manage display" and select "Image" as formatter for an image field.
+## Contributing
 
-3. Click the settings button. Then you can enter the element class(es) for
-   the image field. Finally click "Update".
+For bugs and feature requests, [please create an issue](https://www.drupal.org/node/add/project-issue/image_class). Patches and always welcome.

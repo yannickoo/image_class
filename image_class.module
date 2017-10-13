@@ -2,89 +2,64 @@
 
 /**
  * @file
- * Main file of Image Class module.
+ * Main file of Image class module.
  */
+
+use Drupal\Core\Field\FormatterInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
- * Implements hook_field_formatter_info_alter().
+ * Implements hook_field_formatter_third_party_settings_form().
  */
-function image_class_field_formatter_info_alter(&$infos) {
-  $infos['image']['settings']['class'] = '';
-}
+function image_class_field_formatter_third_party_settings_form(FormatterInterface $plugin) {
+  $element = [];
 
-/**
- * Implements hook_field_formatter_settings_form_alter().
- */
-function image_class_field_formatter_settings_form_alter(&$settings_form, $context) {
-  $display = $context['instance']['display'][$context['view_mode']];
-  $settings = $display['settings'];
-
-  if ($context['instance']['display'][$context['view_mode']]['type'] == 'image') {
-    $settings_form['class'] = array(
-      '#title' => t('Classes'),
+  if (in_array($plugin->getPluginId(), ['image', 'responsive_image'])) {
+    $element['class'] = [
       '#type' => 'textfield',
-      '#default_value' => $settings['class'],
-      '#description' => t('Enter space seperated classes which will be added to the %img element.', array('%img' => '<img>')),
-    );
+      '#title' => t('Class'),
+      '#description' => t('Enter space seperated classes which will be added to the %img element.', ['%img' => '<img>']),
+      '#default_value' => $plugin->getThirdPartySetting('image_class', 'class'),
+    ];
   }
+
+  return $element;
 }
 
 /**
  * Implements hook_field_formatter_settings_summary_alter().
  */
 function image_class_field_formatter_settings_summary_alter(&$summary, $context) {
-  $display = $context['instance']['display'][$context['view_mode']];
-  $settings = $display['settings'];
+  /** @var \Drupal\Core\Field\FormatterInterface $formatter */
+  $formatter = $context['formatter'];
 
-  if ($context['instance']['display'][$context['view_mode']]['type'] == 'image') {
-    if (isset($settings['class']) && $settings['class']) {
-      $summary .= '<br />' . t('Class: @class', array('@class' => $settings['class']));
-    }
+  if ($class = $formatter->getThirdPartySetting('image_class', 'class')) {
+    $summary[] = t('Class: @class', ['@class' => $class]);
   }
 }
 
 /**
- * Implements hook_field_attach_view_alter().
+ * Implements hook_preprocess_field().
  */
-function image_class_field_attach_view_alter(&$output, $context) {
-  foreach (element_children($output) as $field_name) {
-    $element = &$output[$field_name];
+function image_class_preprocess_field(&$variables) {
+  $element = $variables['element'];
 
-    $view_modes = field_view_mode_settings($element['#entity_type'], $element['#bundle']);
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+  $entity = $element['#object'];
 
-    // Check whether set view mode has custom settings.
-    if (isset($view_modes[$context['view_mode']]) && !$view_modes[$context['view_mode']]['custom_settings']) {
-      $context['view_mode'] = 'default';
-    }
+  $entity_display = EntityViewDisplay::collectRenderDisplay($entity, $element['#view_mode']);
+  $field_display = $entity_display->getComponent($element['#field_name']);
 
-    $instance = field_info_instance($element['#entity_type'], $field_name, $element['#bundle']);
+  if (isset($field_display['third_party_settings']['image_class']['class'])) {
+    $class = explode(' ', $field_display['third_party_settings']['image_class']['class']);
 
-    // Check whether view mode exists in the field instance.
-    if (isset($instance['display'][$context['view_mode']])) {
-      $display = $instance['display'][$context['view_mode']];
-    }
-    // If no view mode was specified it should be set to '_custom'
-    // like in field_view_field().
-    elseif ($context['view_mode'] == '_custom' && is_array($context['display'])) {
-      $display = $context['display'];
-    }
-    // Otherwise we use the 'default' view mode.
-    else {
-      $display = $instance['display']['default'];
-    }
+    foreach ($variables['items'] as $delta => &$item) {
+      // Preserve any classes that has been set already.
+      if (is_array($item['content']['#item_attributes']['class'])) {
+        $class = array_merge($item['content']['#item_attributes']['class'], $class);
+      }
 
-    $settings = $display['settings'];
-    $class = isset($settings['class']) ? trim($settings['class']) : FALSE;
-
-    // Move on to the next child if 'class' setting is not available.
-    if (!$class) {
-      continue;
-    }
-
-    // Add 'class' setting to the attributes of all children elements.
-    foreach (element_children($element) as $delta) {
-      // If 'class' setting is provided as string add it as an array.
-      $element[$delta]['#item']['attributes']['class'] = explode(' ', trim($settings['class']));
+      $item['content']['#item_attributes']['class'] = $class;
     }
   }
 }
