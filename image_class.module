@@ -55,7 +55,7 @@ function image_class_preprocess_field(&$variables) {
 
     foreach ($variables['items'] as $delta => &$item) {
       // Preserve any classes that has been set already.
-      if (is_array($item['content']['#item_attributes']['class'])) {
+      if (isset($item['content']['#item_attributes']['class']) && is_array($item['content']['#item_attributes']['class'])) {
         $class = array_merge($item['content']['#item_attributes']['class'], $class);
       }
 
